@@ -8,6 +8,20 @@ const findAll = async (req,res)=>{
         return res.status(404).send(error)
     }
 }
+const findRel = async (req,res)=>{
+    try {
+        const region = await req.context.models.dependents.findAll({
+            include : [{
+                model : req.context.models.employees,
+                as : "employee",
+                
+            }]
+        })
+        return res.send(region)
+    } catch (error) {
+        return res.status(404).send(error)
+    }
+}
 const findOne = async (req,res)=>{      
     try {
         const dependent = await req.context.models.dependents.findOne({   
@@ -73,6 +87,7 @@ const querySQL = async(req,res)=>{
 
 export default {
     findAll,
+    findRel,
     findOne,
     create,
     update,

@@ -4,6 +4,7 @@ import indexCtrl from "../controller/indexCtrl";
 const router = Router()
 
 router.get('/',indexCtrl.depCtrl.findAll)
+router.get('/rel',indexCtrl.depCtrl.findRel)
 router.get('/:id',indexCtrl.depCtrl.findOne)
 router.post('/',indexCtrl.depCtrl.create)
 router.put('/:id',indexCtrl.depCtrl.update)

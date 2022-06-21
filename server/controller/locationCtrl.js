@@ -8,6 +8,20 @@ const findAll = async (req,res)=>{
         return res.status(404).send(error)
     }
 }
+const findRel = async (req,res)=>{
+    try {
+        const location = await req.context.models.locations.findAll({
+            include : [{
+                model : req.context.models.departments,
+                as : "departments",
+                left : true
+            }]
+        })
+        return res.send(location)
+    } catch (error) {
+        return res.status(404).send(error)
+    }
+}
 const findOne = async (req,res)=>{  
     try {
         const location = await req.context.models.locations.findOne({
@@ -23,14 +37,30 @@ const create = async (req,res)=>{
     try {
         const location = await req.context.models.locations.create({
             location_id : req.body.location_id,
-            location_name : req.body.location_name,
-            region_id : req.body.region_id
+            street_address : req.body.street_address,
+            region_id : req.body.region_id,
+            country_id : req.body.country_id,
         })
         return res.send(location)
     } catch (error) {
         return res.status(404).send(error)
     }
 }
+const createNext = async (req,res,next )=>{
+    try {
+        const location = await req.context.models.locations.create({
+            location_id : req.body.location_id,
+            street_address : req.body.street_address,
+            region_id : req.body.region_id,
+            country_id : req.body.country_id,
+        })
+        req.locations = location
+        next()
+    } catch (error) {
+        return res.status(404).send(error)
+    }
+}
+
 
 const update = async (req,res)=>{
     try {
@@ -68,8 +98,10 @@ const querySQL = async(req,res)=>{
 
 export default {
     findAll,
+    findRel,
     findOne,
     create,
+    createNext,
     update,
     deleted,
     querySQL
